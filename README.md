@@ -12,7 +12,7 @@ Commands from Makefile could be executed manually in case Make utility is not in
 
     Make build
 
-## Build container and install composer dependencies
+## Copy dist files
 
 If dist files are not copied to actual destination, then
     
