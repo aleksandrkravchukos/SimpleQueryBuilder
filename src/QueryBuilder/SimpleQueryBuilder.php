@@ -67,11 +67,11 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     public function where($conditions): SimpleQueryBuilderInterface
     {
         if (is_array($conditions) && count($conditions) == 4) {
-            $this->where .= sprintf(" %s %s %s '%s' ", $conditions[0], $conditions[1], $conditions[2], $conditions[3]);
+            $this->where .= sprintf("%s %s %s '%s' ", $conditions[0], $conditions[1], $conditions[2], $conditions[3]);
         }
 
         if (is_string($conditions)) {
-            $this->where .= sprintf(' %s ', $conditions);
+            $this->where .= sprintf('%s ', $conditions);
         }
 
         return $this;
@@ -163,40 +163,38 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function build(): string
     {
-
-
-
         $this->query = $this->query = sprintf(
             "SELECT %s FROM %s ",
             implode(',', $this->select),
             implode(',', $this->from),
             );
 
+
         if ($this->where !== '') {
-            $this->query .= sprintf(" WHERE %s ", $this->where);
+            $this->query .= sprintf("WHERE %s ", trim($this->where));
         }
 
         if ($this->groupBy) {
-            $this->query .= sprintf(" GROUP BY %s ", implode(',', $this->groupBy));
+            $this->query .= sprintf("GROUP BY %s ", trim(implode(',', $this->groupBy)));
         }
 
         if ($this->having !== '') {
-            $this->query .= sprintf(" HEAVING %s ", $this->having);
+            $this->query .= sprintf("HEAVING %s ", $this->having);
         }
 
         if ($this->orderBy) {
-            $this->query .= sprintf(" ORDER BY %s ", implode(',', $this->orderBy));
+            $this->query .= sprintf("ORDER BY %s ", implode(',', $this->orderBy));
         }
 
         if ($this->limit !== null) {
-            $this->query .= sprintf(" LIMIT %d", $this->limit);
+            $this->query .= sprintf("LIMIT %d ", $this->limit);
         }
 
         if ($this->offset !== null) {
-            $this->query .= sprintf(" OFFSET %d", $this->offset);
+            $this->query .= sprintf("OFFSET %d ", $this->offset);
         }
 
-        return $this->query;
+        return trim($this->query);
     }
 
     /**

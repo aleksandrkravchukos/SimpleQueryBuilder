@@ -23,24 +23,52 @@ class SimpleQueryBuilderClassTest extends TestCase
     /**
      * @test
      */
-    public function checkSqlStringBuild(): void
+    public function checkSqlStringBuildFromArraysParameters(): void
     {
+        $select = ['*', 'author'];
+        $from = ['authors'];
         $conditions = ['', 'author', '=', 'some author name'];
-        $conditions2 = ['AND', 'author', '<>', 'another author name'];
-        $conditions3 = ["AND author = 'test'"];
+        $conditionsSecond = ['AND', 'author', '<>', 'another author name'];
+        $conditionsThird = ['AND', 'author', '=', 'test'];
         $fieldsGroupBy = ['author'];
 
-        $select = $this->simpleQueryBuilder
-            ->select(['*', 'author'])
-            ->from(['authors'])
+        $query = $this->simpleQueryBuilder
+            ->select($select)
+            ->from($from)
             ->where($conditions)
-            ->where($conditions2)
-            ->where($conditions3)
+            ->where($conditionsSecond)
+            ->where($conditionsThird)
             ->groupBy($fieldsGroupBy)
             ->build();
 
-        $this->assertIsString($select);
-        $this->assertEquals("SELECT *,author FROM authors  WHERE   author = 'some author name'  AND author <> 'another author name'   GROUP BY author ", $select);
+        $this->assertIsString($query);
+        $this->assertEquals("SELECT *,author FROM authors WHERE author = 'some author name' AND author <> 'another author name' AND author = 'test' GROUP BY author", $query);
+
+    }
+
+    /**
+     * @test
+     */
+    public function checkSqlStringBuildFromStringsParameters(): void
+    {
+        $select = '*,author';
+        $from = 'authors';
+        $conditions = "author = 'some author name'";
+        $conditionsSecond = "AND author <> 'another author name'";
+        $conditionsThird = "AND author = 'test'";
+        $fieldsGroupBy = 'author';
+
+        $query = $this->simpleQueryBuilder
+            ->select($select)
+            ->from($from)
+            ->where($conditions)
+            ->where($conditionsSecond)
+            ->where($conditionsThird)
+            ->groupBy($fieldsGroupBy)
+            ->build();
+
+        $this->assertIsString($query);
+        $this->assertEquals("SELECT *,author FROM authors WHERE author = 'some author name' AND author <> 'another author name' AND author = 'test' GROUP BY author", $query);
 
     }
 }
