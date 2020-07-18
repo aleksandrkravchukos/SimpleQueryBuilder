@@ -186,7 +186,6 @@ class SimpleQueryBuilderClassTest extends TestCase
     public function checkFromTypeParameterIsInteger(): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('The parameter WHERE type is not array or is not string');
         $this->expectExceptionMessage('Type of parameters FROM is incorrect');
 
         $select = '*';
@@ -199,4 +198,112 @@ class SimpleQueryBuilderClassTest extends TestCase
             ->where($where)
             ->build();
     }
+
+    /**
+     * @test
+     */
+    public function checkSelectTypeParameterIsCorrect(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Type of SELECT parameter is incorrect. This can be only array or string');
+
+        $select = 100500;
+        $where = "author = 'some author name'";
+        $from = 'authors';
+
+        $this->simpleQueryBuilder
+            ->select($select)
+            ->from($from)
+            ->where($where)
+            ->build();
+    }
+
+
+    /**
+     * @test
+     */
+    public function buildWithLimit(): void
+    {
+        $select = 'author';
+        $where = "author = 'some author name'";
+        $from = 'authors';
+
+        $query = $this->simpleQueryBuilder
+            ->select($select)
+            ->limit(10)
+            ->from($from)
+            ->where($where)
+            ->build();
+
+        $this->assertIsString($query);
+        $this->assertEquals("SELECT author FROM authors WHERE author = 'some author name' LIMIT 10", $query);
+    }
+
+    /**
+     * @test
+     */
+    public function buildWithLimitIncorrectType(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Type of LIMIT parameter is incorrect. This can be only integer');
+
+        $select = 'author';
+        $where = "author = 'some author name'";
+        $from = 'authors';
+
+        $this->simpleQueryBuilder
+            ->select($select)
+            ->limit("test")
+            ->from($from)
+            ->where($where)
+            ->build();
+    }
+
+    /**
+     * @test
+     */
+    public function buildWithOffsetIncorrectType(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Type of OFFSET parameter is incorrect. This can be only integer');
+
+        $select = 'author';
+        $where = "author = 'some author name'";
+        $from = 'authors';
+
+        $this->simpleQueryBuilder
+            ->select($select)
+            ->offset("test")
+            ->from($from)
+            ->where($where)
+            ->build();
+    }
+
+    /**
+     * @test
+     */
+    public function checkSqlStringBuildFromArraysParametersWithBuildCount(): void
+    {
+        $select = ['author'];
+        $from = 'authors';
+        $conditions = ['', 'author', '=', 'some author name'];
+        $conditionsSecond = ['AND', 'author', '<>', 'another author name'];
+        $conditionsThird = ['AND', 'author', '=', 'test'];
+        $fieldsGroupBy = ['author'];
+
+        $query = $this->simpleQueryBuilder->select($select);
+        $query->buildCount();
+        $query = $query
+            ->from($from)
+            ->where($conditions)
+            ->where($conditionsSecond)
+            ->where($conditionsThird)
+            ->groupBy($fieldsGroupBy)
+            ->build();
+
+        $this->assertIsString($query);
+        $this->assertEquals("SELECT count(author) FROM authors WHERE author = 'some author name' AND author <> 'another author name' AND author = 'test' GROUP BY author", $query);
+        $this->assertNotEquals("SELECT *,author FROM authors WHERE author = 'some author name' AND author <> 'another author name' AND author = 'test' GROUP BY author ", $query);
+    }
+
 }

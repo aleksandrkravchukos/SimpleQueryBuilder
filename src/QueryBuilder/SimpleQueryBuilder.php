@@ -38,6 +38,11 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 
         $this->select = array_merge($this->select, $selectArray);
 
+        if (!is_array($fields) && !is_string($fields)) {
+            $this->select = ['empty'];
+            $this->errors['selectError'] = 'Type of SELECT parameter is incorrect. This can be only array or string';
+        }
+
         return $this;
     }
 
@@ -172,6 +177,9 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function limit($limit): SimpleQueryBuilderInterface
     {
+        if (!is_integer($limit)) {
+            $this->errors['errorLimit'] = 'Type of LIMIT parameter is incorrect. This can be only integer';
+        }
         $this->limit = $limit;
 
         return $this;
@@ -183,6 +191,10 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function offset($offset): SimpleQueryBuilderInterface
     {
+        if (!is_integer($offset)) {
+            $this->errors['errorOffset'] = 'Type of OFFSET parameter is incorrect. This can be only integer';
+        }
+
         $this->offset = $offset;
 
         return $this;
@@ -208,6 +220,18 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 
         if (isset($this->errors['fromError'])) {
             throw new LogicException($this->errors['fromError']);
+        }
+
+        if (isset($this->errors['selectError'])) {
+            throw new LogicException($this->errors['selectError']);
+        }
+
+        if (isset($this->errors['errorLimit'])) {
+            throw new LogicException($this->errors['errorLimit']);
+        }
+
+        if (isset($this->errors['errorOffset'])) {
+            throw new LogicException($this->errors['errorOffset']);
         }
 
         $this->query = $this->query = sprintf(
@@ -250,6 +274,14 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function buildCount(): string
     {
+        $result = [];
 
+        foreach ($this->select as $select) {
+            $result[] = sprintf('count(%s)', $select);
+        }
+
+        $this->select = $result;
+
+        return implode(',', $result);
     }
 }
