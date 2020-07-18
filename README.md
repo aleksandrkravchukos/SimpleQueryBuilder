@@ -37,11 +37,11 @@ Runs container and executes console application.
     Make run
     
 
-## Run unit tests
+## Run functional tests
 
-Runs container and executes unit tests.
+Runs container and executes functional tests.
 
-    Make unit-tests
+    Make functional-tests
     
 ## Fix code style
 
