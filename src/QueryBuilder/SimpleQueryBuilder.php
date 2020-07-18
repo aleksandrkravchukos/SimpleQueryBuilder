@@ -9,15 +9,15 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     /**
      * @var string
      */
-    private string $query = '';
-    private array $select = [];
-    private string $from = '';
-    private string $where = '';
+    private string $query  = '';
+    private array $select  = [];
+    private string $from   = '';
+    private string $where  = '';
     private array $groupBy = [];
     private string $having = '';
     private array $orderBy = [];
-    private $limit = null;
-    private $offset = null;
+    private $limit         = null;
+    private $offset        = null;
     private array $errors;
 
     /**
@@ -39,7 +39,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
         $this->select = array_merge($this->select, $selectArray);
 
         if (!is_array($fields) && !is_string($fields)) {
-            $this->select = ['empty'];
+            $this->select                = ['empty'];
             $this->errors['selectError'] = 'Type of SELECT parameter is incorrect. This can be only array or string';
         }
 
@@ -85,7 +85,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
         }
 
         if (!is_array($tables) && !($tables instanceof SimpleQueryBuilderInterface) && !(is_string($tables))) {
-            $this->from = 'empty';
+            $this->from                = 'empty';
             $this->errors['fromError'] = 'Type of parameters FROM is incorrect';
         }
 

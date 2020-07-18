@@ -2,6 +2,8 @@
 
 namespace MySimpleQueryBuilder\QueryBuilder;
 
+use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
+
 interface SimpleQueryBuilderInterface
 {
     /**

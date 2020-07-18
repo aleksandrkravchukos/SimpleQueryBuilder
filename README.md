@@ -42,12 +42,6 @@ Runs container and executes console application.
 Runs container and executes unit tests.
 
     Make unit-tests
-
-## Static analysis
-
-Static analysis check
-
-    Make static-analysis
     
 ## Fix code style
 
