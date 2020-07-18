@@ -276,6 +276,10 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     {
         $result = [];
 
+        if (!is_string($this->select) && !is_array($this->select)) {
+            throw new LogicException('SELECT values can be only string or array');
+        }
+
         foreach ($this->select as $select) {
             $result[] = sprintf('count(%s)', $select);
         }

@@ -306,4 +306,25 @@ class SimpleQueryBuilderClassTest extends TestCase
         $this->assertNotEquals("SELECT *,author FROM authors WHERE author = 'some author name' AND author <> 'another author name' AND author = 'test' GROUP BY author ", $query);
     }
 
+    /**
+     * @test
+     */
+    public function buildWithSelectIncorrectType(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('SELECT values can be only string or array');
+        $this->expectExceptionMessage('Type of SELECT parameter is incorrect. This can be only array or string');
+
+        $select = 100500;
+        $where = "author = 'some author name'";
+        $from = 'authors';
+
+        $query = $this->simpleQueryBuilder->select($select);
+        $query->buildCount();
+        $query
+            ->from($from)
+            ->where($where)
+            ->build();
+    }
+
 }
