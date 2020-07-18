@@ -288,7 +288,7 @@ class SimpleQueryBuilderClassTest extends TestCase
         $from             = 'authors';
         $conditions       = ['', 'author', '=', 'some author name'];
         $conditionsSecond = ['AND', 'author', '<>', 'another author name'];
-        $conditionsThird  = ['AND', 'author', '=', 'test'];
+        $conditionsThird  = ['OR', 'author', '=', 'test'];
         $fieldsGroupBy    = ['author'];
 
         $query = $this->simpleQueryBuilder->select($select);
@@ -302,7 +302,7 @@ class SimpleQueryBuilderClassTest extends TestCase
             ->build();
 
         $this->assertIsString($query);
-        $this->assertEquals("SELECT count(author) FROM authors WHERE author = 'some author name' AND author <> 'another author name' AND author = 'test' GROUP BY author", $query);
+        $this->assertEquals("SELECT count(author) FROM authors WHERE author = 'some author name' AND author <> 'another author name' OR author = 'test' GROUP BY author", $query);
         $this->assertNotEquals("SELECT *,author FROM authors WHERE author = 'some author name' AND author <> 'another author name' AND author = 'test' GROUP BY author ", $query);
     }
 

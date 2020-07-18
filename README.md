@@ -29,13 +29,6 @@ Up containers.
 Check if all good.
 
     Make check           
-        
-## Run application
-
-Runs container and executes console application.
-
-    Make run
-    
 
 ## Run functional tests
 

@@ -6,9 +6,6 @@ use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
 
 class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 {
-    /**
-     * @var string
-     */
     private string $query  = '';
     private array $select  = [];
     private string $from   = '';
