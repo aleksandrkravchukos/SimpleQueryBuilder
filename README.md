@@ -1,4 +1,4 @@
-## Simple query interface task
+## SimpleQueryBuilderInterface task
 
 Implement SimpleQueryBuilderInterface
 
