@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Sample\QueryBuilder;
+namespace MySimpleQueryBuilder\QueryBuilder;
 
-class LogicException extends \Exception
+use Exception;
+
+class LogicException extends Exception
 {
 }

@@ -1,6 +1,6 @@
-# Docker / PHP 7.4 console / composer / phpunit 
+## Simple query interface task
 
-Blank docker project for console php 7.4 projects with composer and phpunit.
+Implement SimpleQueryBuilderInterface
 
 ## Prerequisites
 

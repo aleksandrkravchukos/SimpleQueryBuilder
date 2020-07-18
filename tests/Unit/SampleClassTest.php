@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SampleTest\Unit;
+namespace MySimpleQueryBuilder\Unit;
 
 use PHPUnit\Framework\TestCase;
 
