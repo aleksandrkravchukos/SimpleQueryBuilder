@@ -2,6 +2,8 @@
 
 namespace MySimpleQueryBuilder\QueryBuilder;
 
+use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
+
 class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 {
     /**
@@ -46,16 +48,19 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function from($tables): SimpleQueryBuilderInterface
     {
-        $tableArray = [];
-        if (is_array($tables)) {
-            $tableArray = $tables;
-        }
+        if (!($tables instanceof SimpleQueryBuilderInterface)) {
 
-        if (is_string($tables)) {
-            $tableArray = explode(',', trim($tables));
-        }
+            $tableArray = [];
+            if (is_array($tables)) {
+                $tableArray = $tables;
+            }
 
-        $this->from = array_merge($this->from, $tableArray);
+            if (is_string($tables)) {
+                $tableArray = explode(',', trim($tables));
+            }
+
+            $this->from = array_merge($this->from, $tableArray);
+        }
 
         return $this;
     }
@@ -72,6 +77,10 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 
         if (is_string($conditions)) {
             $this->where .= sprintf('%s ', $conditions);
+        }
+
+        if (!is_string($conditions) && !is_array($conditions)) {
+            $this->where = 0;
         }
 
         return $this;
@@ -163,6 +172,14 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function build(): string
     {
+        if ($this->from === []) {
+            throw new LogicException('The parameter FROM is not filled');
+        }
+
+        if ($this->select === []) {
+            throw new LogicException('The parameter SELECT is not filled');
+        }
+
         $this->query = $this->query = sprintf(
             "SELECT %s FROM %s ",
             implode(',', $this->select),
