@@ -27,7 +27,7 @@ class SimpleQueryBuilderClassTest extends TestCase
     public function checkSqlStringBuildFromArraysParameters(): void
     {
         $select = ['*', 'author'];
-        $from = ['authors'];
+        $from = 'authors';
         $conditions = ['', 'author', '=', 'some author name'];
         $conditionsSecond = ['AND', 'author', '<>', 'another author name'];
         $conditionsThird = ['AND', 'author', '=', 'test'];
@@ -53,7 +53,7 @@ class SimpleQueryBuilderClassTest extends TestCase
     public function checkSqlStringBuildFromArraysParametersWithOneCondition(): void
     {
         $select = ['*', 'author'];
-        $from = ['authors'];
+        $from = 'authors';
         $conditions = ['', 'author', '=', 'some author name'];
         $fieldsGroupBy = ['author'];
 
@@ -102,9 +102,8 @@ class SimpleQueryBuilderClassTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('The parameter SELECT is not filled');
 
-        $from = 'authors';
         $this->simpleQueryBuilder
-            ->from($from)
+            ->from('authors')
             ->build();
     }
 
@@ -119,6 +118,85 @@ class SimpleQueryBuilderClassTest extends TestCase
         $from = '*';
         $this->simpleQueryBuilder
             ->select($from)
+            ->build();
+    }
+
+    /**
+     * @test
+     */
+    public function checkWhereTypeParameterException(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The parameter WHERE type is not array or is not string');
+
+        $from = '*';
+        $where = 100500;
+        $this->simpleQueryBuilder
+            ->select($from)
+            ->from('authors')
+            ->where($where)
+            ->build();
+    }
+
+    /**
+     * @test
+     */
+    public function checkFromTypeParameterIsSimpleQueryBuilderInterface(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The parameter WHERE type is not array or is not string');
+
+        $select = '*';
+        $where = 100500;
+        $builder = new SimpleQueryBuilder();
+        $builder->from(['authors']);
+        $builder->select('authors_another');
+
+        $this->simpleQueryBuilder
+            ->select($select)
+            ->from($builder)
+            ->where($where)
+            ->build();
+    }
+
+    /**
+     * @test
+     */
+    public function checkFromTypeParameterIsSimpleQueryBuilderInterfaceArray(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The parameter WHERE type is not array or is not string');
+
+        $select = '*';
+        $where = 100500;
+        $builder = new SimpleQueryBuilder();
+        $builder->from(['authors']);
+        $builder->select('authors_another');
+
+        $this->simpleQueryBuilder
+            ->select($select)
+            ->from([$builder])
+            ->where($where)
+            ->build();
+    }
+
+    /**
+     * @test
+     */
+    public function checkFromTypeParameterIsInteger(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('The parameter WHERE type is not array or is not string');
+        $this->expectExceptionMessage('Type of parameters FROM is incorrect');
+
+        $select = '*';
+        $where = "author = 'some author name'";
+        $from = 100500;
+
+        $this->simpleQueryBuilder
+            ->select($select)
+            ->from($from)
+            ->where($where)
             ->build();
     }
 }

@@ -11,14 +11,13 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     private string $query = '';
     private array $select = [];
-    private array $from = [];
+    private string $from = '';
     private string $where = '';
     private array $groupBy = [];
     private string $having = '';
     private array $orderBy = [];
     private $limit = null;
     private $offset = null;
-
     private array $errors;
 
     /**
@@ -48,18 +47,41 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function from($tables): SimpleQueryBuilderInterface
     {
-        if (!($tables instanceof SimpleQueryBuilderInterface)) {
+        if (is_string($tables)) {
+            $this->from = $tables;
+        }
 
-            $tableArray = [];
-            if (is_array($tables)) {
-                $tableArray = $tables;
+        if ($tables instanceof SimpleQueryBuilderInterface) {
+            $this->from = $tables->build();
+        }
+
+        if (is_array($tables)) {
+            foreach ($tables as $table) {
+                if ($table instanceof SimpleQueryBuilderInterface) {
+                    if ($this->from !== '') {
+                        $this->from = $table->build();
+                    } else {
+                        $this->from .= $table->build() . ',';
+                    }
+                }
+
+                if (is_string($table)) {
+                    if ($this->from !== '') {
+                        $this->from = $table;
+                    } else {
+                        $this->from .= $table . ',';
+                    }
+                }
             }
 
-            if (is_string($tables)) {
-                $tableArray = explode(',', trim($tables));
+            if ($this->from[strlen($this->from) - 1] == ',') {
+                $this->from = substr($this->from, 0, strlen($this->from) - 1);
             }
+        }
 
-            $this->from = array_merge($this->from, $tableArray);
+        if (!is_array($tables) && !($tables instanceof SimpleQueryBuilderInterface) && !(is_string($tables))) {
+            $this->from = 'empty';
+            $this->errors['fromError'] = 'Type of parameters FROM is incorrect';
         }
 
         return $this;
@@ -80,7 +102,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
         }
 
         if (!is_string($conditions) && !is_array($conditions)) {
-            $this->where = 0;
+            $this->errors['where'] = 'The parameter WHERE type is not array or is not string';
         }
 
         return $this;
@@ -172,7 +194,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function build(): string
     {
-        if ($this->from === []) {
+        if ($this->from === '') {
             throw new LogicException('The parameter FROM is not filled');
         }
 
@@ -180,10 +202,18 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
             throw new LogicException('The parameter SELECT is not filled');
         }
 
+        if (isset($this->errors['where'])) {
+            throw new LogicException($this->errors['where']);
+        }
+
+        if (isset($this->errors['fromError'])) {
+            throw new LogicException($this->errors['fromError']);
+        }
+
         $this->query = $this->query = sprintf(
             "SELECT %s FROM %s ",
             implode(',', $this->select),
-            implode(',', $this->from),
+            $this->from,
             );
 
 
