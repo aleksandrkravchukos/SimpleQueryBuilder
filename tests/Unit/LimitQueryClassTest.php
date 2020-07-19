@@ -73,7 +73,7 @@ class LimitQueryClassTest extends TestCase
     public function testLimitIncorrectTypeException(): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Limit can be only integer and more or equal than 0');
+        $this->expectExceptionMessage('Limit can be only integer and more than 0');
 
         $select = 'author';
         $where  = "author = 'some author name'";
