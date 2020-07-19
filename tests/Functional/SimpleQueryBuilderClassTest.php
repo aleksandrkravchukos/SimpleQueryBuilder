@@ -5,6 +5,7 @@ namespace MySimpleQueryBuilder\Functional;
 use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\SimpleQueryBuilder;
 use PHPUnit\Framework\TestCase;
 
@@ -19,13 +20,20 @@ class SimpleQueryBuilderClassTest extends TestCase
 
     private SelectQueryBuilder $selectQueryBuilder;
     private FromQueryBuilder $fromQueryBuilder;
+    private WhereQueryBuilder $whereQueryBuilder;
 
     protected function setUp(): void
     {
         $this->selectQueryBuilder = new SelectQueryBuilder();
-        $this->fromQueryBuilder = new FromQueryBuilder();
+        $this->fromQueryBuilder   = new FromQueryBuilder();
+        $this->whereQueryBuilder  = new WhereQueryBuilder();
 
-        $this->simpleQueryBuilder = new SimpleQueryBuilder($this->selectQueryBuilder, $this->fromQueryBuilder);
+        $this->simpleQueryBuilder = new SimpleQueryBuilder(
+            $this->selectQueryBuilder,
+            $this->fromQueryBuilder,
+            $this->whereQueryBuilder,
+
+        );
     }
 
     /**
@@ -155,7 +163,11 @@ class SimpleQueryBuilderClassTest extends TestCase
 
         $select  = '*';
         $where   = 100500;
-        $builder = new SimpleQueryBuilder($this->selectQueryBuilder, $this->fromQueryBuilder);
+        $builder = new SimpleQueryBuilder(
+            $this->selectQueryBuilder,
+            $this->fromQueryBuilder,
+            $this->whereQueryBuilder
+        );
         $builder->from(['authors']);
         $builder->select('authors_another');
 
@@ -176,7 +188,11 @@ class SimpleQueryBuilderClassTest extends TestCase
 
         $select  = '*';
         $where   = 100500;
-        $builder = new SimpleQueryBuilder($this->selectQueryBuilder, $this->fromQueryBuilder);
+        $builder = new SimpleQueryBuilder(
+            $this->selectQueryBuilder,
+            $this->fromQueryBuilder,
+            $this->whereQueryBuilder,
+        );
         $builder->from(['authors']);
         $builder->select('authors_another');
 

@@ -4,7 +4,9 @@ namespace MySimpleQueryBuilder\QueryBuilder;
 
 use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\QueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
 
 class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 {
@@ -21,14 +23,17 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 
     private SelectQueryBuilder $selectQueryBuilder;
     private FromQueryBuilder $fromQueryBuilder;
+    private WhereQueryBuilder $whereQueryBuilder;
 
     public function __construct(
         SelectQueryBuilder $selectQueryBuilder,
-        FromQueryBuilder $fromQueryBuilder
+        FromQueryBuilder $fromQueryBuilder,
+        WhereQueryBuilder $whereQueryBuilder
     )
     {
         $this->selectQueryBuilder = $selectQueryBuilder;
-        $this->fromQueryBuilder = $fromQueryBuilder;
+        $this->fromQueryBuilder   = $fromQueryBuilder;
+        $this->whereQueryBuilder  = $whereQueryBuilder;
     }
 
     /**
@@ -50,10 +55,6 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     {
 
         $this->from = $this->fromQueryBuilder->build($tables);
-//        if (!is_array($tables) && !($tables instanceof SimpleQueryBuilderInterface) && !(is_string($tables))) {
-//            $this->from                = 'empty';
-//            $this->errors['fromError'] = 'Type of parameters FROM is incorrect';
-//        }
 
         return $this;
     }
@@ -64,17 +65,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function where($conditions): SimpleQueryBuilderInterface
     {
-        if (is_array($conditions) && count($conditions) == 4) {
-            $this->where .= sprintf("%s %s %s '%s' ", $conditions[0], $conditions[1], $conditions[2], $conditions[3]);
-        }
-
-        if (is_string($conditions)) {
-            $this->where .= sprintf('%s ', $conditions);
-        }
-
-        if (!is_string($conditions) && !is_array($conditions)) {
-            $this->errors['where'] = 'The parameter WHERE type is not array or is not string';
-        }
+        $this->where .= $this->whereQueryBuilder->build($conditions);
 
         return $this;
     }
@@ -177,10 +168,6 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
             throw new LogicException('The parameter SELECT is not filled');
         }
 
-        if (isset($this->errors['where'])) {
-            throw new LogicException($this->errors['where']);
-        }
-
         if (isset($this->errors['selectError'])) {
             throw new LogicException($this->errors['selectError']);
         }
@@ -201,13 +188,17 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
             throw new LogicException("FROM parameter is incorrect or can not be empty");
         }
 
+        if (!$this->where) {
+            throw new LogicException("The parameter WHERE type is not array or is not string");
+        }
+
         $this->query = $this->query = sprintf(
             "SELECT %s FROM %s ",
             $this->select,
             $this->from,
             );
 
-//        var_dump($this->query);exit();
+//        var_dump($this->where);exit();
 
         if ($this->where !== '') {
             $this->query .= sprintf("WHERE %s ", trim($this->where));
