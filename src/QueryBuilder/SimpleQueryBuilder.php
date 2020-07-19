@@ -3,11 +3,12 @@
 namespace MySimpleQueryBuilder\QueryBuilder;
 
 use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
 
 class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 {
     private string $query  = '';
-    private array $select  = [];
+    private string $select = '';
     private string $from   = '';
     private string $where  = '';
     private array $groupBy = [];
@@ -15,7 +16,14 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     private array $orderBy = [];
     private $limit         = null;
     private $offset        = null;
-    private array $errors;
+    private array $errors  = [];
+
+    private SelectQueryBuilder $selectQueryBuilder;
+
+    public function __construct(SelectQueryBuilder $selectQueryBuilder)
+    {
+        $this->selectQueryBuilder = $selectQueryBuilder;
+    }
 
     /**
      * @param array|string $fields
@@ -23,22 +31,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function select($fields): SimpleQueryBuilderInterface
     {
-
-        $selectArray = [];
-        if (is_array($fields)) {
-            $selectArray = $fields;
-        }
-
-        if (is_string($fields)) {
-            $selectArray = explode(',', trim($fields));
-        }
-
-        $this->select = array_merge($this->select, $selectArray);
-
-        if (!is_array($fields) && !is_string($fields)) {
-            $this->select                = ['empty'];
-            $this->errors['selectError'] = 'Type of SELECT parameter is incorrect. This can be only array or string';
-        }
+        $this->select = $this->selectQueryBuilder->build($fields);
 
         return $this;
     }
@@ -231,12 +224,17 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
             throw new LogicException($this->errors['errorOffset']);
         }
 
+        if (!$this->select) {
+            throw new LogicException("Type of SELECT parameter is incorrect. This can be only array or string");
+        }
+
         $this->query = $this->query = sprintf(
             "SELECT %s FROM %s ",
-            implode(',', $this->select),
+            $this->select,
             $this->from,
             );
 
+//        var_dump($this->query);exit();
 
         if ($this->where !== '') {
             $this->query .= sprintf("WHERE %s ", trim($this->where));
@@ -273,16 +271,18 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     {
         $result = [];
 
-        if (!is_string($this->select) && !is_array($this->select)) {
+        if (!$this->select) {
             throw new LogicException('SELECT values can be only string or array');
         }
 
-        foreach ($this->select as $select) {
+        $selects = explode(',', $this->select);
+
+        foreach ($selects as $select) {
             $result[] = sprintf('count(%s)', $select);
         }
 
-        $this->select = $result;
+        $this->select = implode(',', $result);
 
-        return implode(',', $result);
+        return $this->select;
     }
 }

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace MySimpleQueryBuilder\Unit;
+namespace MySimpleQueryBuilder\Functional;
 
 use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\SimpleQueryBuilder;
-use MySimpleQueryBuilder\QueryBuilder\SimpleQueryBuilderInterface;
 use PHPUnit\Framework\TestCase;
 
 
@@ -14,11 +14,14 @@ use PHPUnit\Framework\TestCase;
 class SimpleQueryBuilderClassTest extends TestCase
 {
 
-    private SimpleQueryBuilderInterface $simpleQueryBuilder;
+    private SimpleQueryBuilder $simpleQueryBuilder;
+    private SelectQueryBuilder $selectQueryBuilder;
 
     protected function setUp(): void
     {
-        $this->simpleQueryBuilder = new SimpleQueryBuilder();
+        $this->selectQueryBuilder = new SelectQueryBuilder();
+
+        $this->simpleQueryBuilder = new SimpleQueryBuilder($this->selectQueryBuilder);
     }
 
     /**
@@ -100,7 +103,7 @@ class SimpleQueryBuilderClassTest extends TestCase
     public function checkFilledQuerySelectParameter(): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('The parameter SELECT is not filled');
+        $this->expectExceptionMessage('Type of SELECT parameter is incorrect. This can be only array or string');
 
         $this->simpleQueryBuilder
             ->from('authors')
@@ -148,7 +151,7 @@ class SimpleQueryBuilderClassTest extends TestCase
 
         $select  = '*';
         $where   = 100500;
-        $builder = new SimpleQueryBuilder();
+        $builder = new SimpleQueryBuilder($this->selectQueryBuilder);
         $builder->from(['authors']);
         $builder->select('authors_another');
 
@@ -169,7 +172,7 @@ class SimpleQueryBuilderClassTest extends TestCase
 
         $select  = '*';
         $where   = 100500;
-        $builder = new SimpleQueryBuilder();
+        $builder = new SimpleQueryBuilder($this->selectQueryBuilder);
         $builder->from(['authors']);
         $builder->select('authors_another');
 
@@ -293,6 +296,8 @@ class SimpleQueryBuilderClassTest extends TestCase
 
         $query = $this->simpleQueryBuilder->select($select);
         $query->buildCount();
+
+
         $query = $query
             ->from($from)
             ->where($conditions)
@@ -313,7 +318,6 @@ class SimpleQueryBuilderClassTest extends TestCase
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('SELECT values can be only string or array');
-        $this->expectExceptionMessage('Type of SELECT parameter is incorrect. This can be only array or string');
 
         $select = 100500;
         $where  = "author = 'some author name'";
