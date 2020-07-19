@@ -21,7 +21,6 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     private string $orderBy = '';
     private $limit          = null;
     private $offset         = null;
-    private array $errors   = [];
 
     private SelectQueryBuilder $selectQueryBuilder;
     private FromQueryBuilder $fromQueryBuilder;

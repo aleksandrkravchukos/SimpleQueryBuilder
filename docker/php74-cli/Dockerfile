@@ -1,6 +1,6 @@
 FROM php:7.4-cli
 
-MAINTAINER Denis Negometyanov <denis.negometyanov@gmail.com>
+MAINTAINER Aleksandr Kravchuk <aleksandr.kravchuk@ukr.net>
 
 RUN apt-get update \
     && apt-get install -y curl libfreetype6-dev libmcrypt-dev libzip-dev git \
