@@ -5,38 +5,42 @@ namespace MySimpleQueryBuilder\QueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\GroupByQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\HavingQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
 
 class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 {
-    private string $query   = '';
-    private string $select  = '';
-    private string $from    = '';
-    private string $where   = '';
+    private string $query = '';
+    private string $select = '';
+    private string $from = '';
+    private string $where = '';
     private string $groupBy = '';
-    private string $having  = '';
-    private array $orderBy  = [];
-    private $limit          = null;
-    private $offset         = null;
-    private array $errors   = [];
+    private string $having = '';
+    private array $orderBy = [];
+    private $limit = null;
+    private $offset = null;
+    private array $errors = [];
 
     private SelectQueryBuilder $selectQueryBuilder;
     private FromQueryBuilder $fromQueryBuilder;
     private WhereQueryBuilder $whereQueryBuilder;
     private GroupByQueryBuilder $groupByQueryBuilder;
+    private HavingQueryBuilder $havingQueryBuilder;
 
     public function __construct(
         SelectQueryBuilder $selectQueryBuilder,
         FromQueryBuilder $fromQueryBuilder,
         WhereQueryBuilder $whereQueryBuilder,
-        GroupByQueryBuilder $groupByQueryBuilder
+        GroupByQueryBuilder $groupByQueryBuilder,
+        HavingQueryBuilder $havingQueryBuilder
     )
     {
-        $this->selectQueryBuilder  = $selectQueryBuilder;
-        $this->fromQueryBuilder    = $fromQueryBuilder;
-        $this->whereQueryBuilder   = $whereQueryBuilder;
+        $this->selectQueryBuilder = $selectQueryBuilder;
+        $this->fromQueryBuilder = $fromQueryBuilder;
+        $this->whereQueryBuilder = $whereQueryBuilder;
         $this->groupByQueryBuilder = $groupByQueryBuilder;
+        $this->havingQueryBuilder = $havingQueryBuilder;
     }
 
     /**
@@ -90,13 +94,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function having($conditions): SimpleQueryBuilderInterface
     {
-        if (is_array($conditions) && count($conditions) == 4) {
-            $this->having .= sprintf(' %d(%d) %d %d ', $conditions[0], $conditions[1], $conditions[2], $conditions[3]);
-        }
-
-        if (is_string($conditions)) {
-            $this->having .= sprintf(' %d ', $conditions);
-        }
+        $this->having = $this->havingQueryBuilder->build($conditions);
 
         return $this;
     }

@@ -1,0 +1,24 @@
+<?php declare(strict_types=1);
+
+namespace MySimpleQueryBuilder\QueryBuilder\QueryParts;
+
+class HavingQueryBuilder implements QueryPartsBuilderInterface
+{
+    /**
+     * @param string|array $conditions
+     * @return string
+     */
+    public function build($conditions): string
+    {
+        $having = '';
+        if (is_array($conditions) && count($conditions) == 4) {
+            $having .= sprintf(' %d(%d) %d %d ', $conditions[0], $conditions[1], $conditions[2], $conditions[3]);
+        }
+
+        if (is_string($conditions)) {
+            $having .= sprintf(' %d ', $conditions);
+        }
+
+        return $having;
+    }
+}

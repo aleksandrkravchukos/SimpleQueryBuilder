@@ -5,6 +5,7 @@ namespace MySimpleQueryBuilder\Unit;
 use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\GroupByQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\HavingQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\SimpleQueryBuilder;
@@ -23,6 +24,7 @@ class BuildCountQueryClassTest extends TestCase
     private FromQueryBuilder $fromQueryBuilder;
     private WhereQueryBuilder $whereQueryBuilder;
     private GroupByQueryBuilder $groupByQueryBuilder;
+    private HavingQueryBuilder $havingQueryBuilder;
 
     protected function setUp(): void
     {
@@ -30,12 +32,14 @@ class BuildCountQueryClassTest extends TestCase
         $this->fromQueryBuilder    = new FromQueryBuilder();
         $this->whereQueryBuilder   = new WhereQueryBuilder();
         $this->groupByQueryBuilder = new GroupByQueryBuilder();
+        $this->havingQueryBuilder = new HavingQueryBuilder();
 
         $this->simpleQueryBuilder  = new SimpleQueryBuilder(
             $this->selectQueryBuilder,
             $this->fromQueryBuilder,
             $this->whereQueryBuilder,
-            $this->groupByQueryBuilder
+            $this->groupByQueryBuilder,
+            $this->havingQueryBuilder
         );
     }
 
