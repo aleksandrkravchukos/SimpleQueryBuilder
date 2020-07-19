@@ -193,7 +193,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
             $this->query .= sprintf("WHERE %s ", trim($this->where));
         }
 
-        if ($this->groupBy) {
+        if ($this->groupBy !== '') {
             $this->query .= sprintf("GROUP BY %s ", trim($this->groupBy));
         }
 
@@ -201,7 +201,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
             $this->query .= sprintf("HEAVING %s ", trim($this->having));
         }
 
-        if ($this->orderBy) {
+        if ($this->orderBy !== '') {
             $this->query .= sprintf("ORDER BY %s ", $this->orderBy);
         }
 
