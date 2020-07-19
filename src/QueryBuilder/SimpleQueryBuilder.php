@@ -146,7 +146,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     public function build(): string
     {
         if ((!is_null($this->limit) && !is_integer($this->limit)) || $this->limit < 0) {
-            throw new LogicException('Limit can be only integer and more or equal than 0');
+            throw new LogicException('Limit can be only integer and more than 0');
         }
 
         if ((!is_null($this->offset) && !is_integer($this->offset)) || $this->offset < 0) {
