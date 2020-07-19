@@ -3,6 +3,7 @@
 namespace MySimpleQueryBuilder\Functional;
 
 use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\SimpleQueryBuilder;
 use PHPUnit\Framework\TestCase;
@@ -15,13 +16,16 @@ class SimpleQueryBuilderClassTest extends TestCase
 {
 
     private SimpleQueryBuilder $simpleQueryBuilder;
+
     private SelectQueryBuilder $selectQueryBuilder;
+    private FromQueryBuilder $fromQueryBuilder;
 
     protected function setUp(): void
     {
         $this->selectQueryBuilder = new SelectQueryBuilder();
+        $this->fromQueryBuilder = new FromQueryBuilder();
 
-        $this->simpleQueryBuilder = new SimpleQueryBuilder($this->selectQueryBuilder);
+        $this->simpleQueryBuilder = new SimpleQueryBuilder($this->selectQueryBuilder, $this->fromQueryBuilder);
     }
 
     /**
@@ -116,7 +120,7 @@ class SimpleQueryBuilderClassTest extends TestCase
     public function checkFilledQueryFromParameterException(): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('The parameter FROM is not filled');
+        $this->expectExceptionMessage('FROM parameter is incorrect or can not be empty');
 
         $from = '*';
         $this->simpleQueryBuilder
@@ -151,7 +155,7 @@ class SimpleQueryBuilderClassTest extends TestCase
 
         $select  = '*';
         $where   = 100500;
-        $builder = new SimpleQueryBuilder($this->selectQueryBuilder);
+        $builder = new SimpleQueryBuilder($this->selectQueryBuilder, $this->fromQueryBuilder);
         $builder->from(['authors']);
         $builder->select('authors_another');
 
@@ -172,7 +176,7 @@ class SimpleQueryBuilderClassTest extends TestCase
 
         $select  = '*';
         $where   = 100500;
-        $builder = new SimpleQueryBuilder($this->selectQueryBuilder);
+        $builder = new SimpleQueryBuilder($this->selectQueryBuilder, $this->fromQueryBuilder);
         $builder->from(['authors']);
         $builder->select('authors_another');
 
@@ -189,7 +193,7 @@ class SimpleQueryBuilderClassTest extends TestCase
     public function checkFromTypeParameterIsInteger(): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Type of parameters FROM is incorrect');
+        $this->expectExceptionMessage('FROM parameter is incorrect or can not be empty');
 
         $select = '*';
         $where  = "author = 'some author name'";

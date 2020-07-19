@@ -3,6 +3,7 @@
 namespace MySimpleQueryBuilder\QueryBuilder;
 
 use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
 
 class SimpleQueryBuilder implements SimpleQueryBuilderInterface
@@ -19,10 +20,15 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     private array $errors  = [];
 
     private SelectQueryBuilder $selectQueryBuilder;
+    private FromQueryBuilder $fromQueryBuilder;
 
-    public function __construct(SelectQueryBuilder $selectQueryBuilder)
+    public function __construct(
+        SelectQueryBuilder $selectQueryBuilder,
+        FromQueryBuilder $fromQueryBuilder
+    )
     {
         $this->selectQueryBuilder = $selectQueryBuilder;
+        $this->fromQueryBuilder = $fromQueryBuilder;
     }
 
     /**
@@ -42,42 +48,12 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function from($tables): SimpleQueryBuilderInterface
     {
-        if (is_string($tables)) {
-            $this->from = $tables;
-        }
 
-        if ($tables instanceof SimpleQueryBuilderInterface) {
-            $this->from = $tables->build();
-        }
-
-        if (is_array($tables)) {
-            foreach ($tables as $table) {
-                if ($table instanceof SimpleQueryBuilderInterface) {
-                    if ($this->from !== '') {
-                        $this->from = $table->build();
-                    } else {
-                        $this->from .= $table->build() . ',';
-                    }
-                }
-
-                if (is_string($table)) {
-                    if ($this->from !== '') {
-                        $this->from = $table;
-                    } else {
-                        $this->from .= $table . ',';
-                    }
-                }
-            }
-
-            if ($this->from[strlen($this->from) - 1] == ',') {
-                $this->from = substr($this->from, 0, strlen($this->from) - 1);
-            }
-        }
-
-        if (!is_array($tables) && !($tables instanceof SimpleQueryBuilderInterface) && !(is_string($tables))) {
-            $this->from                = 'empty';
-            $this->errors['fromError'] = 'Type of parameters FROM is incorrect';
-        }
+        $this->from = $this->fromQueryBuilder->build($tables);
+//        if (!is_array($tables) && !($tables instanceof SimpleQueryBuilderInterface) && !(is_string($tables))) {
+//            $this->from                = 'empty';
+//            $this->errors['fromError'] = 'Type of parameters FROM is incorrect';
+//        }
 
         return $this;
     }
@@ -196,9 +172,6 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function build(): string
     {
-        if ($this->from === '') {
-            throw new LogicException('The parameter FROM is not filled');
-        }
 
         if ($this->select === []) {
             throw new LogicException('The parameter SELECT is not filled');
@@ -206,10 +179,6 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 
         if (isset($this->errors['where'])) {
             throw new LogicException($this->errors['where']);
-        }
-
-        if (isset($this->errors['fromError'])) {
-            throw new LogicException($this->errors['fromError']);
         }
 
         if (isset($this->errors['selectError'])) {
@@ -226,6 +195,10 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 
         if (!$this->select) {
             throw new LogicException("Type of SELECT parameter is incorrect. This can be only array or string");
+        }
+
+        if (!$this->from) {
+            throw new LogicException("FROM parameter is incorrect or can not be empty");
         }
 
         $this->query = $this->query = sprintf(

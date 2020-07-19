@@ -2,7 +2,9 @@
 
 namespace MySimpleQueryBuilder\QueryBuilder\QueryParts;
 
-class SelectQueryBuilder
+use MySimpleQueryBuilder\QueryBuilder\SelectQueryBuilderInterface;
+
+class SelectQueryBuilder implements SelectQueryBuilderInterface
 {
     /**
      * @param array|string $fields
