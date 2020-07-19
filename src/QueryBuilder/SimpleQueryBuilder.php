@@ -153,10 +153,6 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
             throw new LogicException('Offset can be only integer and more or equal than 0');
         }
 
-        if (isset($this->errors['errorOffset'])) {
-            throw new LogicException($this->errors['errorOffset']);
-        }
-
         if (!$this->select) {
             throw new LogicException("Type of SELECT parameter is incorrect. This can be only array or string and can not be empty");
         }
