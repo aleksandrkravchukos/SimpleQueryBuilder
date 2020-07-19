@@ -173,6 +173,10 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
             throw new LogicException("The parameter GROUP BY type is not array or is not string");
         }
 
+        if ($this->orderBy == 'incorrect') {
+            throw new LogicException("The parameter ORDER BY type is not array or is not string");
+        }
+
         if ($this->having == 'incorrect') {
             throw new LogicException("The parameter HAVING type is not array or is not string");
         }

@@ -19,6 +19,10 @@ class OrderByQueryBuilder implements QueryPartsBuilderInterface
             $orderBy = trim($fields);
         }
 
+        if (!is_string($fields) && !is_array($fields) && !empty($fields)) {
+            $orderBy = 'incorrect';
+        }
+
         return $orderBy;
     }
 }
