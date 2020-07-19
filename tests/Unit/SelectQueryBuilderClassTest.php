@@ -34,7 +34,7 @@ class SelectQueryBuilderClassTest extends TestCase
         $this->whereQueryBuilder   = new WhereQueryBuilder();
         $this->groupByQueryBuilder = new GroupByQueryBuilder();
         $this->orderByQueryBuilder = new OrderByQueryBuilder();
-        $this->havingQueryBuilder = new HavingQueryBuilder();
+        $this->havingQueryBuilder  = new HavingQueryBuilder();
 
         $this->simpleQueryBuilder  = new SimpleQueryBuilder(
             $this->selectQueryBuilder,

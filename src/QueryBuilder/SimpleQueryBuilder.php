@@ -12,16 +12,16 @@ use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
 
 class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 {
-    private string $query = '';
-    private string $select = '';
-    private string $from = '';
-    private string $where = '';
+    private string $query   = '';
+    private string $select  = '';
+    private string $from    = '';
+    private string $where   = '';
     private string $groupBy = '';
-    private string $having = '';
+    private string $having  = '';
     private string $orderBy = '';
-    private $limit = null;
-    private $offset = null;
-    private array $errors = [];
+    private $limit          = null;
+    private $offset         = null;
+    private array $errors   = [];
 
     private SelectQueryBuilder $selectQueryBuilder;
     private FromQueryBuilder $fromQueryBuilder;
@@ -40,12 +40,12 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
         HavingQueryBuilder $havingQueryBuilder
     )
     {
-        $this->selectQueryBuilder = $selectQueryBuilder;
-        $this->fromQueryBuilder = $fromQueryBuilder;
-        $this->whereQueryBuilder = $whereQueryBuilder;
+        $this->selectQueryBuilder  = $selectQueryBuilder;
+        $this->fromQueryBuilder    = $fromQueryBuilder;
+        $this->whereQueryBuilder   = $whereQueryBuilder;
         $this->groupByQueryBuilder = $groupByQueryBuilder;
         $this->orderByQueryBuilder = $orderByQueryBuilder;
-        $this->havingQueryBuilder = $havingQueryBuilder;
+        $this->havingQueryBuilder  = $havingQueryBuilder;
     }
 
     /**
@@ -133,9 +133,6 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function offset($offset): SimpleQueryBuilderInterface
     {
-        if (!is_integer($offset)) {
-            $this->errors['errorOffset'] = 'Type of OFFSET parameter is incorrect. This can be only integer';
-        }
 
         $this->offset = $offset;
 
@@ -150,6 +147,10 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     {
         if ((!is_null($this->limit) && !is_integer($this->limit)) || $this->limit < 0) {
             throw new LogicException('Limit can be only integer and more or equal than 0');
+        }
+
+        if ((!is_null($this->offset) && !is_integer($this->offset)) || $this->offset < 0) {
+            throw new LogicException('Offset can be only integer and more or equal than 0');
         }
 
         if (isset($this->errors['errorOffset'])) {
@@ -170,6 +171,10 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 
         if ($this->groupBy == 'incorrect') {
             throw new LogicException("The parameter GROUP BY type is not array or is not string");
+        }
+
+        if ($this->having == 'incorrect') {
+            throw new LogicException("The parameter HAVING type is not array or is not string");
         }
 
         if ($this->select !== '') {
@@ -193,7 +198,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
         }
 
         if ($this->orderBy) {
-            $this->query .= sprintf("ORDER BY %s ", implode(',', $this->orderBy));
+            $this->query .= sprintf("ORDER BY %s ", $this->orderBy);
         }
 
         if ($this->limit !== null) {

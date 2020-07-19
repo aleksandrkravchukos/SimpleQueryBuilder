@@ -12,11 +12,15 @@ class HavingQueryBuilder implements QueryPartsBuilderInterface
     {
         $having = '';
         if (is_array($conditions) && count($conditions) == 4) {
-            $having .= sprintf(' %d(%d) %d %d ', $conditions[0], $conditions[1], $conditions[2], $conditions[3]);
+            $having = sprintf(' %d(%d) %d %d ', $conditions[0], $conditions[1], $conditions[2], $conditions[3]);
         }
 
         if (is_string($conditions)) {
-            $having .= sprintf(' %d ', $conditions);
+            $having = sprintf(' %d ', $conditions);
+        }
+
+        if (!is_string($conditions) && !is_array($conditions) && !empty($conditions)) {
+            $having = 'incorrect';
         }
 
         return $having;
