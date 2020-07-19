@@ -30,11 +30,11 @@ Check if all good.
 
     Make check           
 
-## Run functional tests
+## Run unit tests
 
-Runs container and executes functional tests.
+Runs container and executes unit tests.
 
-    Make functional-tests
+    Make unit-tests
     
 ## Fix code style
 

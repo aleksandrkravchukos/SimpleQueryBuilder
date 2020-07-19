@@ -12,12 +12,18 @@ class WhereQueryBuilder implements QueryPartsBuilderInterface
     {
         $where = '';
 
-        if (is_array($conditions) && count($conditions) == 4) {
-            $where = sprintf("%s %s %s '%s' ", $conditions[0], $conditions[1], $conditions[2], $conditions[3]);
+        if (is_array($conditions)) {
+            if (count($conditions) === 4) {
+                $where = sprintf("%s %s %s '%s' ", $conditions[0], $conditions[1], $conditions[2], $conditions[3]);
+            }
         }
 
         if (is_string($conditions)) {
             $where = sprintf('%s ', $conditions);
+        }
+
+        if (!is_string($conditions) && !is_array($conditions) && !empty($conditions)) {
+            $where = 'incorrect';
         }
 
         return $where;

@@ -4,36 +4,39 @@ namespace MySimpleQueryBuilder\QueryBuilder;
 
 use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
-use MySimpleQueryBuilder\QueryBuilder\QueryParts\QueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\GroupByQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
 
 class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 {
-    private string $query  = '';
-    private string $select = '';
-    private string $from   = '';
-    private string $where  = '';
-    private array $groupBy = [];
-    private string $having = '';
-    private array $orderBy = [];
-    private $limit         = null;
-    private $offset        = null;
-    private array $errors  = [];
+    private string $query   = '';
+    private string $select  = '';
+    private string $from    = '';
+    private string $where   = '';
+    private string $groupBy = '';
+    private string $having  = '';
+    private array $orderBy  = [];
+    private $limit          = null;
+    private $offset         = null;
+    private array $errors   = [];
 
     private SelectQueryBuilder $selectQueryBuilder;
     private FromQueryBuilder $fromQueryBuilder;
     private WhereQueryBuilder $whereQueryBuilder;
+    private GroupByQueryBuilder $groupByQueryBuilder;
 
     public function __construct(
         SelectQueryBuilder $selectQueryBuilder,
         FromQueryBuilder $fromQueryBuilder,
-        WhereQueryBuilder $whereQueryBuilder
+        WhereQueryBuilder $whereQueryBuilder,
+        GroupByQueryBuilder $groupByQueryBuilder
     )
     {
-        $this->selectQueryBuilder = $selectQueryBuilder;
-        $this->fromQueryBuilder   = $fromQueryBuilder;
-        $this->whereQueryBuilder  = $whereQueryBuilder;
+        $this->selectQueryBuilder  = $selectQueryBuilder;
+        $this->fromQueryBuilder    = $fromQueryBuilder;
+        $this->whereQueryBuilder   = $whereQueryBuilder;
+        $this->groupByQueryBuilder = $groupByQueryBuilder;
     }
 
     /**
@@ -76,16 +79,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function groupBy($fields): SimpleQueryBuilderInterface
     {
-        $fieldArray = [];
-        if (is_array($fields)) {
-            $fieldArray = $fields;
-        }
-
-        if (is_string($fields)) {
-            $fieldArray = explode(',', trim($fields));
-        }
-
-        $this->groupBy = array_merge($this->groupBy, $fieldArray);
+        $this->groupBy = $this->groupByQueryBuilder->build($fields);
 
         return $this;
     }
@@ -134,9 +128,6 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function limit($limit): SimpleQueryBuilderInterface
     {
-        if (!is_integer($limit)) {
-            $this->errors['errorLimit'] = 'Type of LIMIT parameter is incorrect. This can be only integer';
-        }
         $this->limit = $limit;
 
         return $this;
@@ -163,17 +154,8 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
      */
     public function build(): string
     {
-
-        if ($this->select === []) {
-            throw new LogicException('The parameter SELECT is not filled');
-        }
-
-        if (isset($this->errors['selectError'])) {
-            throw new LogicException($this->errors['selectError']);
-        }
-
-        if (isset($this->errors['errorLimit'])) {
-            throw new LogicException($this->errors['errorLimit']);
+        if ((!is_null($this->limit) && !is_integer($this->limit)) || $this->limit < 0) {
+            throw new LogicException('Limit can be only integer and more or equal than 0');
         }
 
         if (isset($this->errors['errorOffset'])) {
@@ -181,35 +163,39 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
         }
 
         if (!$this->select) {
-            throw new LogicException("Type of SELECT parameter is incorrect. This can be only array or string");
+            throw new LogicException("Type of SELECT parameter is incorrect. This can be only array or string and can not be empty");
         }
 
         if (!$this->from) {
             throw new LogicException("FROM parameter is incorrect or can not be empty");
         }
 
-        if (!$this->where) {
+        if ($this->where == 'incorrect') {
             throw new LogicException("The parameter WHERE type is not array or is not string");
         }
 
-        $this->query = $this->query = sprintf(
-            "SELECT %s FROM %s ",
-            $this->select,
-            $this->from,
-            );
+        if ($this->groupBy == 'incorrect') {
+            throw new LogicException("The parameter GROUP BY type is not array or is not string");
+        }
 
-//        var_dump($this->where);exit();
+        if ($this->select !== '') {
+            $this->query .= sprintf("SELECT %s ", trim($this->select));
+        }
+
+        if ($this->from !== '') {
+            $this->query .= sprintf("FROM %s ", trim($this->from));
+        }
 
         if ($this->where !== '') {
             $this->query .= sprintf("WHERE %s ", trim($this->where));
         }
 
         if ($this->groupBy) {
-            $this->query .= sprintf("GROUP BY %s ", trim(implode(',', $this->groupBy)));
+            $this->query .= sprintf("GROUP BY %s ", trim($this->groupBy));
         }
 
         if ($this->having !== '') {
-            $this->query .= sprintf("HEAVING %s ", $this->having);
+            $this->query .= sprintf("HEAVING %s ", trim($this->having));
         }
 
         if ($this->orderBy) {
@@ -236,7 +222,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
         $result = [];
 
         if (!$this->select) {
-            throw new LogicException('SELECT values can be only string or array');
+            throw new LogicException('SELECT values can be only string or array and can not be empty');
         }
 
         $selects = explode(',', $this->select);

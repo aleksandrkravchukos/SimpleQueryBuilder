@@ -16,24 +16,45 @@ class FromQueryBuilder implements QueryPartsBuilderInterface
         if (is_string($tables)) {
             $from = $tables;
         }
-
+        $subQueryIndex = 1;
         if ($tables instanceof SimpleQueryBuilderInterface) {
-            $from = $tables->build();
+
+            $subQuery = $tables->build();
+
+            $subQuery = sprintf(
+                '(%s) as subtable_%s',
+                $subQuery,
+                $subQueryIndex
+            );
+
+            $from = $subQuery;
         }
 
+
         if (is_array($tables)) {
+
             foreach ($tables as $table) {
+
                 if ($table instanceof SimpleQueryBuilderInterface) {
+
+                    $subQuery = $table->build();
+                    $subQuery = sprintf(
+                        '(%s) as subtable_%s',
+                        $subQuery,
+                        $subQueryIndex
+                    );
+
+                    $subQueryIndex++;
                     if ($from !== '') {
-                        $from = $table->build();
+                        $from .= $subQuery;
                     } else {
-                        $from .= $table->build() . ',';
+                        $from = $subQuery . ',';
                     }
                 }
 
                 if (is_string($table)) {
-                    if ($from !== '') {
-                        $from = $table;
+                    if ($from == '') {
+                        $from = $table . ',';
                     } else {
                         $from .= $table . ',';
                     }
@@ -44,6 +65,7 @@ class FromQueryBuilder implements QueryPartsBuilderInterface
                 $from = substr($from, 0, strlen($from) - 1);
             }
         }
+
         return $from;
     }
 }

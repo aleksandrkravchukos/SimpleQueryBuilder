@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace MySimpleQueryBuilder\Unit;
+namespace MySimpleQueryBuilder\Functional;
 
 use PHPUnit\Framework\TestCase;
 
@@ -10,5 +10,7 @@ use PHPUnit\Framework\TestCase;
  */
 class SampleClassTest extends TestCase
 {
-
+    protected function setUp(): void
+    {
+    }
 }

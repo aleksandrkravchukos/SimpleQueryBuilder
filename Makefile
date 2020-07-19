@@ -29,13 +29,14 @@ up:
 check:
 	docker ps
 
+## Run functional tests
+functional-tests:
+	docker-compose run --rm --no-deps php-cli ./vendor/bin/phpunit --no-coverage --stop-on-error --stop-on-failure --testsuite Functional
+
 ## Run unit tests
 unit-tests:
 	docker-compose run --rm --no-deps php-cli ./vendor/bin/phpunit --no-coverage --stop-on-error --stop-on-failure --testsuite Unit
 
-## Run functional tests
-functional-tests:
-	docker-compose run --rm --no-deps php-cli ./vendor/bin/phpunit --no-coverage --stop-on-error --stop-on-failure --testsuite Functional
 
 
 ## Run static analysis
