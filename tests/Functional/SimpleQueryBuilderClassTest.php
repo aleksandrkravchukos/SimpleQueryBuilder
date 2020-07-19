@@ -27,7 +27,7 @@ class SimpleQueryBuilderClassTest extends TestCase
     public function checkSqlStringBuildFromArraysParameters(): void
     {
         $select           = ['*', 'author'];
-        $from             = 'authors';
+        $from             = ['authors'];
         $conditions       = ['', 'author', '=', 'some author name'];
         $conditionsSecond = ['AND', 'author', '<>', 'another author name'];
         $conditionsThird  = ['AND', 'author', '=', 'test'];
