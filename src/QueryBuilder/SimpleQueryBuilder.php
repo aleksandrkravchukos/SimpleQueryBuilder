@@ -6,6 +6,7 @@ use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\GroupByQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\HavingQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\OrderByQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
 
@@ -17,7 +18,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     private string $where = '';
     private string $groupBy = '';
     private string $having = '';
-    private array $orderBy = [];
+    private string $orderBy = '';
     private $limit = null;
     private $offset = null;
     private array $errors = [];
@@ -26,13 +27,16 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     private FromQueryBuilder $fromQueryBuilder;
     private WhereQueryBuilder $whereQueryBuilder;
     private GroupByQueryBuilder $groupByQueryBuilder;
+    private OrderByQueryBuilder $orderByQueryBuilder;
     private HavingQueryBuilder $havingQueryBuilder;
+
 
     public function __construct(
         SelectQueryBuilder $selectQueryBuilder,
         FromQueryBuilder $fromQueryBuilder,
         WhereQueryBuilder $whereQueryBuilder,
         GroupByQueryBuilder $groupByQueryBuilder,
+        OrderByQueryBuilder $orderByQueryBuilder,
         HavingQueryBuilder $havingQueryBuilder
     )
     {
@@ -40,6 +44,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
         $this->fromQueryBuilder = $fromQueryBuilder;
         $this->whereQueryBuilder = $whereQueryBuilder;
         $this->groupByQueryBuilder = $groupByQueryBuilder;
+        $this->orderByQueryBuilder = $orderByQueryBuilder;
         $this->havingQueryBuilder = $havingQueryBuilder;
     }
 
@@ -106,16 +111,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     public function orderBy($fields): SimpleQueryBuilderInterface
     {
 
-        $fieldArray = [];
-        if (is_array($fields)) {
-            $fieldArray = $fields;
-        }
-
-        if (is_string($fields)) {
-            $fieldArray = explode(',', trim($fields));
-        }
-
-        $this->orderBy = array_merge($this->orderBy, $fieldArray);
+        $this->orderBy = $this->orderByQueryBuilder->build($fields);
 
         return $this;
     }

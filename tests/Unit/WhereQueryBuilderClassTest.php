@@ -6,6 +6,7 @@ use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\GroupByQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\HavingQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\OrderByQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\SimpleQueryBuilder;
@@ -23,6 +24,7 @@ class WhereQueryBuilderClassTest extends TestCase
     private FromQueryBuilder $fromQueryBuilder;
     private WhereQueryBuilder $whereQueryBuilder;
     private GroupByQueryBuilder $groupByQueryBuilder;
+    private OrderByQueryBuilder $orderByQueryBuilder;
     private HavingQueryBuilder $havingQueryBuilder;
 
     protected function setUp(): void
@@ -31,6 +33,7 @@ class WhereQueryBuilderClassTest extends TestCase
         $this->fromQueryBuilder    = new FromQueryBuilder();
         $this->whereQueryBuilder   = new WhereQueryBuilder();
         $this->groupByQueryBuilder = new GroupByQueryBuilder();
+        $this->orderByQueryBuilder = new OrderByQueryBuilder();
         $this->havingQueryBuilder = new HavingQueryBuilder();
 
         $this->simpleQueryBuilder  = new SimpleQueryBuilder(
@@ -38,6 +41,7 @@ class WhereQueryBuilderClassTest extends TestCase
             $this->fromQueryBuilder,
             $this->whereQueryBuilder,
             $this->groupByQueryBuilder,
+            $this->orderByQueryBuilder,
             $this->havingQueryBuilder
         );
     }
