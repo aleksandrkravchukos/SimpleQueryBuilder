@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class InvestmentTest
  */
-class OffsetQueryClassTest extends TestCase
+class OrderByQueryBuilderClassTest extends TestCase
 {
 
     private SimpleQueryBuilder $simpleQueryBuilder;
@@ -50,37 +50,64 @@ class OffsetQueryClassTest extends TestCase
     /**
      * @test
      */
-    public function testOffsetSuccess(): void
+    public function testOrderByWithArrayParameterSuccess(): void
     {
-        $select = 'author';
-        $from   = 'authors';
+        $select     = ['*', 'author'];
+        $from       = ['authors'];
+        $conditions = ['', 'author', '=', 'some author name'];
+        $orderBy    = ['author', 'age'];
 
         $query = $this->simpleQueryBuilder
             ->select($select)
             ->from($from)
-            ->limit(10)
-            ->offset(10)
+            ->where($conditions)
+            ->orderBy($orderBy)
             ->build();
 
         $this->assertIsString($query);
-        $this->assertEquals("SELECT author FROM authors LIMIT 10 OFFSET 10", $query);
+        $this->assertEquals("SELECT *,author FROM authors WHERE author = 'some author name' ORDER BY author,age", $query);
+
     }
 
     /**
      * @test
      */
-    public function testOffsetIncorrectTypeException(): void
+    public function testGroupByWithStringParameterSuccess(): void
+    {
+        $select     = ['*', 'author'];
+        $from       = ['authors'];
+        $conditions = ['', 'author', '=', 'some author name'];
+        $orderBy    = 'author,age';
+
+        $query = $this->simpleQueryBuilder
+            ->select($select)
+            ->from($from)
+            ->where($conditions)
+            ->orderBy($orderBy)
+            ->build();
+
+        $this->assertIsString($query);
+        $this->assertEquals("SELECT *,author FROM authors WHERE author = 'some author name' ORDER BY author,age", $query);
+
+    }
+
+    /**
+     * @test
+     */
+    public function testGroupByTypeIsIncorrectParameterException(): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Offset can be only integer and more or equal than 0');
+        $this->expectExceptionMessage('The parameter ORDER BY type is not array or is not string');
 
-        $select = 'author';
-        $from   = 'authors';
-
+        $conditions = ['', 'author', '=', 'some author name'];
+        $select     = ['*', 'author'];
+        $orderBy    = 100500;
+        $from       = ['authors'];
         $this->simpleQueryBuilder
             ->select($select)
             ->from($from)
-            ->offset("test")
+            ->where($conditions)
+            ->orderBy($orderBy)
             ->build();
     }
 
