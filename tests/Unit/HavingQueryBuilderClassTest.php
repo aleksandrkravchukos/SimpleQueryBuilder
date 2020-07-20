@@ -27,7 +27,6 @@ class HavingQueryBuilderClassTest extends TestCase
         $from = "'COUNT(authors.age) > '25'";
         $query = $this->havingQueryBuilder->build($from);
 
-        var_dump($query);exit();
         $this->assertIsString($query);
         $this->assertEquals(" 'COUNT(authors.age) > '25' ", $query);
     }
