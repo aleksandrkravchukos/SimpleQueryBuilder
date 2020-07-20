@@ -2,7 +2,7 @@
 
 namespace MySimpleQueryBuilder\QueryBuilder\QueryParts;
 
-class GroupByQueryBuilder implements QueryPartsBuilderInterface
+class GroupByQueryBuilder implements GroupByPartsBuilderInterface
 {
     /**
      * @param string|array $fields

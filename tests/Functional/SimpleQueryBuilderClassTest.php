@@ -3,12 +3,18 @@
 namespace MySimpleQueryBuilder\Functional;
 
 use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromPartsBuilderInterface;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\GroupByPartsBuilderInterface;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\GroupByQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\HavingPartsBuilderInterface;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\HavingQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\OrderByPartsBuilderInterface;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\OrderByQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\QueryPartsBuilderInterface;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectPartsBuilderInterface;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\WherePartsBuilderInterface;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\SimpleQueryBuilder;
 use PHPUnit\Framework\TestCase;
@@ -21,12 +27,12 @@ class SimpleQueryBuilderClassTest extends TestCase
 {
     private SimpleQueryBuilder $simpleQueryBuilder;
 
-    private QueryPartsBuilderInterface $selectQueryBuilder;
-    private QueryPartsBuilderInterface $fromQueryBuilder;
-    private QueryPartsBuilderInterface $whereQueryBuilder;
-    private QueryPartsBuilderInterface $groupByQueryBuilder;
-    private QueryPartsBuilderInterface $orderByQueryBuilder;
-    private QueryPartsBuilderInterface $havingQueryBuilder;
+    private SelectPartsBuilderInterface $selectQueryBuilder;
+    private FromPartsBuilderInterface $fromQueryBuilder;
+    private WherePartsBuilderInterface $whereQueryBuilder;
+    private GroupByPartsBuilderInterface $groupByQueryBuilder;
+    private OrderByPartsBuilderInterface $orderByQueryBuilder;
+    private HavingPartsBuilderInterface $havingQueryBuilder;
 
     protected function setUp(): void
     {

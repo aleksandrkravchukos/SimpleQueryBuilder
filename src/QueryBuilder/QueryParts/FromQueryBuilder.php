@@ -4,7 +4,7 @@ namespace MySimpleQueryBuilder\QueryBuilder\QueryParts;
 
 use MySimpleQueryBuilder\QueryBuilder\SimpleQueryBuilderInterface;
 
-class FromQueryBuilder implements QueryPartsBuilderInterface
+class FromQueryBuilder implements FromPartsBuilderInterface
 {
     /**
      * @param string|SimpleQueryBuilderInterface|array<string|SimpleQueryBuilderInterface> $tables

@@ -2,7 +2,7 @@
 
 namespace MySimpleQueryBuilder\QueryBuilder\QueryParts;
 
-class OrderByQueryBuilder implements QueryPartsBuilderInterface
+class OrderByQueryBuilder implements OrderByPartsBuilderInterface
 {
     /**
      * @param string|array $fields

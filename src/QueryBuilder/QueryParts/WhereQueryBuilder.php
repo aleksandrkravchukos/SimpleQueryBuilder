@@ -2,7 +2,7 @@
 
 namespace MySimpleQueryBuilder\QueryBuilder\QueryParts;
 
-class WhereQueryBuilder implements QueryPartsBuilderInterface
+class WhereQueryBuilder implements WherePartsBuilderInterface
 {
     /**
      * @param string|array $conditions
