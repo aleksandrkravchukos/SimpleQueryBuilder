@@ -3,7 +3,13 @@
 namespace MySimpleQueryBuilder\QueryBuilder;
 
 use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\GroupByQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\HavingQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\OrderByQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\QueryPartsBuilderInterface;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
 
 class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 {
@@ -26,12 +32,12 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 
 
     public function __construct(
-        QueryPartsBuilderInterface $selectQueryBuilder,
-        QueryPartsBuilderInterface $fromQueryBuilder,
-        QueryPartsBuilderInterface $whereQueryBuilder,
-        QueryPartsBuilderInterface $groupByQueryBuilder,
-        QueryPartsBuilderInterface $orderByQueryBuilder,
-        QueryPartsBuilderInterface $havingQueryBuilder
+        SelectQueryBuilder $selectQueryBuilder,
+        FromQueryBuilder $fromQueryBuilder,
+        WhereQueryBuilder $whereQueryBuilder,
+        GroupByQueryBuilder $groupByQueryBuilder,
+        OrderByQueryBuilder $orderByQueryBuilder,
+        HavingQueryBuilder $havingQueryBuilder
     )
     {
         $this->selectQueryBuilder  = $selectQueryBuilder;
