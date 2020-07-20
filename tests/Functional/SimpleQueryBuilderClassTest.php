@@ -7,6 +7,7 @@ use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\GroupByQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\HavingQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\OrderByQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\QueryPartsBuilderInterface;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\SimpleQueryBuilder;
@@ -20,12 +21,12 @@ class SimpleQueryBuilderClassTest extends TestCase
 {
     private SimpleQueryBuilder $simpleQueryBuilder;
 
-    private SelectQueryBuilder $selectQueryBuilder;
-    private FromQueryBuilder $fromQueryBuilder;
-    private WhereQueryBuilder $whereQueryBuilder;
-    private GroupByQueryBuilder $groupByQueryBuilder;
-    private OrderByQueryBuilder $orderByQueryBuilder;
-    private HavingQueryBuilder $havingQueryBuilder;
+    private QueryPartsBuilderInterface $selectQueryBuilder;
+    private QueryPartsBuilderInterface $fromQueryBuilder;
+    private QueryPartsBuilderInterface $whereQueryBuilder;
+    private QueryPartsBuilderInterface $groupByQueryBuilder;
+    private QueryPartsBuilderInterface $orderByQueryBuilder;
+    private QueryPartsBuilderInterface $havingQueryBuilder;
 
     protected function setUp(): void
     {
