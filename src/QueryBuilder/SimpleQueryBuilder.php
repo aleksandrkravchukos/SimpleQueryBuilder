@@ -3,12 +3,7 @@
 namespace MySimpleQueryBuilder\QueryBuilder;
 
 use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
-use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
-use MySimpleQueryBuilder\QueryBuilder\QueryParts\GroupByQueryBuilder;
-use MySimpleQueryBuilder\QueryBuilder\QueryParts\HavingQueryBuilder;
-use MySimpleQueryBuilder\QueryBuilder\QueryParts\OrderByQueryBuilder;
-use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
-use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
+use MySimpleQueryBuilder\QueryBuilder\QueryParts\QueryPartsBuilderInterface;
 
 class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 {
@@ -22,21 +17,21 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
     private $limit          = null;
     private $offset         = null;
 
-    private SelectQueryBuilder $selectQueryBuilder;
-    private FromQueryBuilder $fromQueryBuilder;
-    private WhereQueryBuilder $whereQueryBuilder;
-    private GroupByQueryBuilder $groupByQueryBuilder;
-    private OrderByQueryBuilder $orderByQueryBuilder;
-    private HavingQueryBuilder $havingQueryBuilder;
+    private QueryPartsBuilderInterface $selectQueryBuilder;
+    private QueryPartsBuilderInterface $fromQueryBuilder;
+    private QueryPartsBuilderInterface $whereQueryBuilder;
+    private QueryPartsBuilderInterface $groupByQueryBuilder;
+    private QueryPartsBuilderInterface $orderByQueryBuilder;
+    private QueryPartsBuilderInterface $havingQueryBuilder;
 
 
     public function __construct(
-        SelectQueryBuilder $selectQueryBuilder,
-        FromQueryBuilder $fromQueryBuilder,
-        WhereQueryBuilder $whereQueryBuilder,
-        GroupByQueryBuilder $groupByQueryBuilder,
-        OrderByQueryBuilder $orderByQueryBuilder,
-        HavingQueryBuilder $havingQueryBuilder
+        QueryPartsBuilderInterface $selectQueryBuilder,
+        QueryPartsBuilderInterface $fromQueryBuilder,
+        QueryPartsBuilderInterface $whereQueryBuilder,
+        QueryPartsBuilderInterface $groupByQueryBuilder,
+        QueryPartsBuilderInterface $orderByQueryBuilder,
+        QueryPartsBuilderInterface $havingQueryBuilder
     )
     {
         $this->selectQueryBuilder  = $selectQueryBuilder;
