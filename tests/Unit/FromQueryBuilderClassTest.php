@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 
 /**
- * Class InvestmentTest
+ * Class FromQueryBuilderClassTest
  */
 class FromQueryBuilderClassTest extends TestCase
 {

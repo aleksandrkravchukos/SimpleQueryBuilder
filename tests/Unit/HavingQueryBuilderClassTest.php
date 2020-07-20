@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 
 /**
- * Class InvestmentTest
+ * Class HavingQueryBuilderClassTest
  */
 class HavingQueryBuilderClassTest extends TestCase
 {

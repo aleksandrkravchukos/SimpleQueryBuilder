@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 
 /**
- * Class InvestmentTest
+ * Class OrderByQueryBuilderClassTest
  */
 class OrderByQueryBuilderClassTest extends TestCase
 {
