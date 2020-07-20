@@ -85,6 +85,7 @@ class SimpleQueryBuilderClassTest extends TestCase
         $conditionsSecond = "AND author <> 'another author name'";
         $fieldGroupBy = 'author';
         $fieldOrderBy = 'age';
+        $havingConditions = ['COUNT','authors.age','>','25'];
 
         $query = $this->simpleQueryBuilder
             ->select($select)
@@ -93,12 +94,13 @@ class SimpleQueryBuilderClassTest extends TestCase
             ->where($conditionsSecond)
             ->groupBy($fieldGroupBy)
             ->orderBy($fieldOrderBy)
+            ->having($havingConditions)
             ->limit(10)
             ->offset(10)
             ->build();
 
         $this->assertIsString($query);
-        $this->assertEquals("SELECT *,author FROM authors WHERE author = 'some author name' AND author <> 'another author name' GROUP BY author ORDER BY age LIMIT 10 OFFSET 10", $query);
+        $this->assertEquals("SELECT *,author FROM authors WHERE author = 'some author name' AND author <> 'another author name' GROUP BY author HAVING COUNT(authors.age) > 25 ORDER BY age LIMIT 10 OFFSET 10", $query);
     }
 
     /**

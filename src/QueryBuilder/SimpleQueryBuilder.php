@@ -193,7 +193,7 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
         }
 
         if ($this->having !== '') {
-            $this->query .= sprintf("HEAVING %s ", trim($this->having));
+            $this->query .= sprintf("HAVING %s ", trim($this->having));
         }
 
         if ($this->orderBy !== '') {
