@@ -35,7 +35,13 @@ Check if all good.
 Runs container and executes unit tests.
 
     Make unit-tests
-    
+
+## Run functional tests
+
+Runs container and executes functional tests.
+
+    Make functional-tests
+        
 ## Fix code style
 
     Make cs-fix
