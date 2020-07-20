@@ -8,6 +8,11 @@ Install Docker and optionally Make utility.
 
 Commands from Makefile could be executed manually in case Make utility is not installed.
 
+## Explanations and additions
+
+- this algorithm not included anti sql injection. For this need make a builder without inserting values
+- need shield for sql injection and this not ready
+
 ## Build container and install composer dependencies
 
     Make build

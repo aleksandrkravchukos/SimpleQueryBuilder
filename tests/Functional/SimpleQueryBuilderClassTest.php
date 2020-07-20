@@ -30,12 +30,12 @@ class SimpleQueryBuilderClassTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->selectQueryBuilder = new SelectQueryBuilder();
-        $this->fromQueryBuilder = new FromQueryBuilder();
-        $this->whereQueryBuilder = new WhereQueryBuilder();
+        $this->selectQueryBuilder  = new SelectQueryBuilder();
+        $this->fromQueryBuilder    = new FromQueryBuilder();
+        $this->whereQueryBuilder   = new WhereQueryBuilder();
         $this->groupByQueryBuilder = new GroupByQueryBuilder();
         $this->orderByQueryBuilder = new OrderByQueryBuilder();
-        $this->havingQueryBuilder = new HavingQueryBuilder();
+        $this->havingQueryBuilder  = new HavingQueryBuilder();
 
         $this->simpleQueryBuilder = new SimpleQueryBuilder(
             $this->selectQueryBuilder,
@@ -52,12 +52,12 @@ class SimpleQueryBuilderClassTest extends TestCase
      */
     public function testSimpleQueryBuilderFromArraysParameters(): void
     {
-        $select = ['*', 'author'];
-        $from = ['authors'];
-        $conditions = ['', 'author.name', '=', 'some author name'];
+        $select           = ['*', 'author'];
+        $from             = ['authors'];
+        $conditions       = ['', 'author.name', '=', 'some author name'];
         $conditionsSecond = ['AND', 'author.name', '<>', 'another author name'];
-        $fieldGroupBy = ['author'];
-        $fieldOrderBy = ['age'];
+        $fieldGroupBy     = ['author'];
+        $fieldOrderBy     = ['age'];
 
         $query = $this->simpleQueryBuilder
             ->select($select)
@@ -79,12 +79,12 @@ class SimpleQueryBuilderClassTest extends TestCase
      */
     public function testSimpleQueryBuilderFromStringsParameters(): void
     {
-        $select = '*,author';
-        $from = 'authors';
-        $conditions = "author = 'some author name'";
+        $select           = '*,author';
+        $from             = 'authors';
+        $conditions       = "author = 'some author name'";
         $conditionsSecond = "AND author <> 'another author name'";
-        $fieldGroupBy = 'author';
-        $fieldOrderBy = 'age';
+        $fieldGroupBy     = 'author';
+        $fieldOrderBy     = 'age';
         $havingConditions = ['COUNT','authors.age','>','25'];
 
         $query = $this->simpleQueryBuilder
@@ -131,7 +131,7 @@ class SimpleQueryBuilderClassTest extends TestCase
         $builderSubQuery2->select('authors_another_table2');
 
         $select = '*';
-        $where = "author = 'some author name'";
+        $where  = "author = 'some author name'";
 
         $query = $this->simpleQueryBuilder
             ->select($select)
@@ -160,7 +160,7 @@ class SimpleQueryBuilderClassTest extends TestCase
         $builderSubQuery->select('authors_another_table');
 
         $select = '*';
-        $where = "author = 'some author name'";
+        $where  = "author = 'some author name'";
 
         $query = $this->simpleQueryBuilder
             ->select($select)
@@ -177,11 +177,11 @@ class SimpleQueryBuilderClassTest extends TestCase
      */
     public function testSimpleQueryBuilderBuildCountParameterSuccess(): void
     {
-        $select = ['author'];
-        $from = 'authors';
-        $conditions = ['', 'author.name', '=', 'some author name'];
+        $select           = ['author'];
+        $from             = 'authors';
+        $conditions       = ['', 'author.name', '=', 'some author name'];
         $conditionsSecond = ['AND', 'author.name', '<>', 'another author name'];
-        $fieldsGroupBy = ['author'];
+        $fieldsGroupBy    = ['author'];
 
         $query = $this->simpleQueryBuilder->select($select);
         $query->buildCount();
@@ -235,8 +235,8 @@ class SimpleQueryBuilderClassTest extends TestCase
         $this->expectExceptionMessage('The parameter WHERE type is not array or is not string');
 
         $select = 'author';
-        $from = 'authors';
-        $where = 100500;
+        $from   = 'authors';
+        $where  = 100500;
         $this->simpleQueryBuilder
             ->select($select)
             ->from($from)
@@ -252,10 +252,10 @@ class SimpleQueryBuilderClassTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('The parameter GROUP BY type is not array or is not string');
 
-        $select = 'author';
-        $from = 'authors';
+        $select    = 'author';
+        $from      = 'authors';
         $condition = "author = 'some author name'";
-        $groupBy = 10500;
+        $groupBy   = 10500;
         $this->simpleQueryBuilder
             ->select($select)
             ->from($from)
@@ -272,11 +272,11 @@ class SimpleQueryBuilderClassTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('The parameter ORDER BY type is not array or is not string');
 
-        $select = 'author';
-        $from = 'authors';
+        $select    = 'author';
+        $from      = 'authors';
         $condition = "author = 'some author name'";
-        $groupBy = 'author.name';
-        $orderBy = 100500;
+        $groupBy   = 'author.name';
+        $orderBy   = 100500;
         $this->simpleQueryBuilder
             ->select($select)
             ->from($from)
@@ -294,12 +294,12 @@ class SimpleQueryBuilderClassTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('The parameter HAVING type is not array or is not string');
 
-        $select = 'author';
-        $from = 'authors';
+        $select    = 'author';
+        $from      = 'authors';
         $condition = "author = 'some author name'";
-        $groupBy = 'author.name';
-        $orderBy = 'author.id';
-        $having = 100500;
+        $groupBy   = 'author.name';
+        $orderBy   = 'author.id';
+        $having    = 100500;
         $this->simpleQueryBuilder
             ->select($select)
             ->from($from)
@@ -318,10 +318,10 @@ class SimpleQueryBuilderClassTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('SELECT values can be only string or array and can not be empty');
 
-        $from = 'authors';
-        $conditions = ['', 'author.name', '=', 'some author name'];
+        $from             = 'authors';
+        $conditions       = ['', 'author.name', '=', 'some author name'];
         $conditionsSecond = ['AND', 'author.name', '<>', 'another author name'];
-        $fieldsGroupBy = ['author'];
+        $fieldsGroupBy    = ['author'];
 
         $query = $this->simpleQueryBuilder->buildCount();
         $query

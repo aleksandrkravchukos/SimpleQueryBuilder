@@ -12,15 +12,15 @@ use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
 
 class SimpleQueryBuilder implements SimpleQueryBuilderInterface
 {
-    private string $query = '';
-    private string $select = '';
-    private string $from = '';
-    private string $where = '';
+    private string $query   = '';
+    private string $select  = '';
+    private string $from    = '';
+    private string $where   = '';
     private string $groupBy = '';
-    private string $having = '';
+    private string $having  = '';
     private string $orderBy = '';
-    private $limit = null;
-    private $offset = null;
+    private $limit          = null;
+    private $offset         = null;
 
     private SelectQueryBuilder $selectQueryBuilder;
     private FromQueryBuilder $fromQueryBuilder;
@@ -39,12 +39,12 @@ class SimpleQueryBuilder implements SimpleQueryBuilderInterface
         HavingQueryBuilder $havingQueryBuilder
     )
     {
-        $this->selectQueryBuilder = $selectQueryBuilder;
-        $this->fromQueryBuilder = $fromQueryBuilder;
-        $this->whereQueryBuilder = $whereQueryBuilder;
+        $this->selectQueryBuilder  = $selectQueryBuilder;
+        $this->fromQueryBuilder    = $fromQueryBuilder;
+        $this->whereQueryBuilder   = $whereQueryBuilder;
         $this->groupByQueryBuilder = $groupByQueryBuilder;
         $this->orderByQueryBuilder = $orderByQueryBuilder;
-        $this->havingQueryBuilder = $havingQueryBuilder;
+        $this->havingQueryBuilder  = $havingQueryBuilder;
     }
 
     /**

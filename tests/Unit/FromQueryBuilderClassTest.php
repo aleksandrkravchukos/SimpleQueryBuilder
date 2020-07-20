@@ -23,7 +23,7 @@ class FromQueryBuilderClassTest extends TestCase
     {
         $this->fromQueryBuilder = new FromQueryBuilder();
 
-        $this->simpleQueryBuilderMock = $this->createMock(SimpleQueryBuilder::class);
+        $this->simpleQueryBuilderMock        = $this->createMock(SimpleQueryBuilder::class);
         $this->simpleQueryBuilderMockAnother = $this->createMock(SimpleQueryBuilder::class);
     }
 
@@ -32,7 +32,7 @@ class FromQueryBuilderClassTest extends TestCase
      */
     public function testFromQueryBuilderWithStringParameterSuccess(): void
     {
-        $from = 'authors,another_table';
+        $from  = 'authors,another_table';
         $query = $this->fromQueryBuilder->build($from);
         $this->assertIsString($query);
         $this->assertEquals("authors,another_table", $query);
@@ -43,7 +43,7 @@ class FromQueryBuilderClassTest extends TestCase
      */
     public function testFromQueryBuilderWithArrayParameterSuccess(): void
     {
-        $from = ['authors', 'another_table'];
+        $from  = ['authors', 'another_table'];
         $query = $this->fromQueryBuilder->build($from);
         $this->assertIsString($query);
         $this->assertEquals("authors,another_table", $query);

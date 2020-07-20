@@ -24,7 +24,7 @@ class GroupByQueryBuilderClassTest extends TestCase
     public function testGroupByQueryBuilderWithStringParameterSuccess(): void
     {
         $groupBy = 'author,age';
-        $query = $this->groupByQueryBuilder->build($groupBy);
+        $query   = $this->groupByQueryBuilder->build($groupBy);
 
         $this->assertIsString($query);
         $this->assertEquals("author,age", $query);
@@ -36,7 +36,7 @@ class GroupByQueryBuilderClassTest extends TestCase
     public function testGroupByQueryBuilderWithArrayParameterSuccess(): void
     {
         $groupBy = ['author', 'age'];
-        $query = $this->groupByQueryBuilder->build($groupBy);
+        $query   = $this->groupByQueryBuilder->build($groupBy);
 
         $this->assertIsString($query);
         $this->assertEquals("author,age", $query);
