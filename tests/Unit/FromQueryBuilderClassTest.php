@@ -63,7 +63,6 @@ class FromQueryBuilderClassTest extends TestCase
         $this->assertEquals("(SELECT field_from_another_table FROM another_table) as subtable_1", $query);
     }
 
-
     /**
      * @test
      */

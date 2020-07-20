@@ -24,11 +24,12 @@ class HavingQueryBuilderClassTest extends TestCase
      */
     public function testFromQueryBuilderWithStringParameterSuccess(): void
     {
-        $from = "'COUNT','authors.age','>','25'";
+        $from = "'COUNT(authors.age) > '25'";
         $query = $this->havingQueryBuilder->build($from);
 
+        var_dump($query);exit();
         $this->assertIsString($query);
-        $this->assertEquals(" 'COUNT','authors.age','>','25' ", $query);
+        $this->assertEquals(" 'COUNT(authors.age) > '25' ", $query);
     }
 
     /**
