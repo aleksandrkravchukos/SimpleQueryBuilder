@@ -2,14 +2,7 @@
 
 namespace MySimpleQueryBuilder\Unit;
 
-use MySimpleQueryBuilder\QueryBuilder\Exception\LogicException;
-use MySimpleQueryBuilder\QueryBuilder\QueryParts\FromQueryBuilder;
-use MySimpleQueryBuilder\QueryBuilder\QueryParts\GroupByQueryBuilder;
-use MySimpleQueryBuilder\QueryBuilder\QueryParts\HavingQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\OrderByQueryBuilder;
-use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
-use MySimpleQueryBuilder\QueryBuilder\QueryParts\WhereQueryBuilder;
-use MySimpleQueryBuilder\QueryBuilder\SimpleQueryBuilder;
 use PHPUnit\Framework\TestCase;
 
 
@@ -19,96 +12,36 @@ use PHPUnit\Framework\TestCase;
 class OrderByQueryBuilderClassTest extends TestCase
 {
 
-    private SimpleQueryBuilder $simpleQueryBuilder;
-
-    private SelectQueryBuilder $selectQueryBuilder;
-    private FromQueryBuilder $fromQueryBuilder;
-    private WhereQueryBuilder $whereQueryBuilder;
-    private GroupByQueryBuilder $groupByQueryBuilder;
     private OrderByQueryBuilder $orderByQueryBuilder;
-    private HavingQueryBuilder $havingQueryBuilder;
 
     protected function setUp(): void
     {
-        $this->selectQueryBuilder  = new SelectQueryBuilder();
-        $this->fromQueryBuilder    = new FromQueryBuilder();
-        $this->whereQueryBuilder   = new WhereQueryBuilder();
-        $this->groupByQueryBuilder = new GroupByQueryBuilder();
         $this->orderByQueryBuilder = new OrderByQueryBuilder();
-        $this->havingQueryBuilder  = new HavingQueryBuilder();
-
-        $this->simpleQueryBuilder  = new SimpleQueryBuilder(
-            $this->selectQueryBuilder,
-            $this->fromQueryBuilder,
-            $this->whereQueryBuilder,
-            $this->groupByQueryBuilder,
-            $this->orderByQueryBuilder,
-            $this->havingQueryBuilder
-        );
     }
 
     /**
      * @test
      */
-    public function testOrderByWithArrayParameterSuccess(): void
+    public function testOrderByQueryBuilderWithArrayParameterSuccess(): void
     {
-        $select     = ['*', 'author'];
-        $from       = ['authors'];
-        $conditions = ['', 'author', '=', 'some author name'];
-        $orderBy    = ['author', 'age'];
+        $orderBy = ['author', 'age'];
 
-        $query = $this->simpleQueryBuilder
-            ->select($select)
-            ->from($from)
-            ->where($conditions)
-            ->orderBy($orderBy)
-            ->build();
+        $query = $this->orderByQueryBuilder->build($orderBy);
 
         $this->assertIsString($query);
-        $this->assertEquals("SELECT *,author FROM authors WHERE author = 'some author name' ORDER BY author,age", $query);
-
+        $this->assertEquals("author,age", $query);
     }
 
     /**
      * @test
      */
-    public function testGroupByWithStringParameterSuccess(): void
+    public function testOrderByQueryBuilderWithStringParameterSuccess(): void
     {
-        $select     = ['*', 'author'];
-        $from       = ['authors'];
-        $conditions = ['', 'author', '=', 'some author name'];
         $orderBy    = 'author,age';
 
-        $query = $this->simpleQueryBuilder
-            ->select($select)
-            ->from($from)
-            ->where($conditions)
-            ->orderBy($orderBy)
-            ->build();
+        $query = $this->orderByQueryBuilder->build($orderBy);
 
         $this->assertIsString($query);
-        $this->assertEquals("SELECT *,author FROM authors WHERE author = 'some author name' ORDER BY author,age", $query);
-
+        $this->assertEquals("author,age", $query);
     }
-
-    /**
-     * @test
-     */
-    public function testGroupByTypeIsIncorrectParameterException(): void
-    {
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('The parameter ORDER BY type is not array or is not string');
-
-        $conditions = ['', 'author', '=', 'some author name'];
-        $select     = ['*', 'author'];
-        $orderBy    = 100500;
-        $from       = ['authors'];
-        $this->simpleQueryBuilder
-            ->select($select)
-            ->from($from)
-            ->where($conditions)
-            ->orderBy($orderBy)
-            ->build();
-    }
-
 }
