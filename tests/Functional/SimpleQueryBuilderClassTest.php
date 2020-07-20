@@ -11,7 +11,6 @@ use MySimpleQueryBuilder\QueryBuilder\QueryParts\HavingPartsBuilderInterface;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\HavingQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\OrderByPartsBuilderInterface;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\OrderByQueryBuilder;
-use MySimpleQueryBuilder\QueryBuilder\QueryParts\QueryPartsBuilderInterface;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectPartsBuilderInterface;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\SelectQueryBuilder;
 use MySimpleQueryBuilder\QueryBuilder\QueryParts\WherePartsBuilderInterface;
